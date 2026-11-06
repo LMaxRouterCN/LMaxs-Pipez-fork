@@ -153,16 +153,17 @@ public abstract class PipeTileEntity extends BlockEntity implements ITickableBlo
 
         Map<DirectionalPosition, Connection> connections = new HashMap<>();
 
-        Map<BlockPos, Integer> queue = new HashMap<>();
-        List<BlockPos> travelPositions = new ArrayList<>();
+        // [修复#1 BFS] 原实现 HashMap+findAny 为伪随机出队(不是BFS), 节点距离可被先抵达的长路锁死并传染整棵子树.
+        // 改为 ArrayDeque FIFO + visited 入队即标记: 出队序=发现序, 距离单调不减, 首次出队即最短,
+        // 同距离平局按方向枚举序稳定保持(TODO #1: 依赖 List.sort 的稳定性, 排序端无需改动).
+        Deque<Map.Entry<BlockPos, Integer>> queue = new ArrayDeque<>();
+        Set<BlockPos> visited = new HashSet<>();
+        visited.add(worldPosition); // 根预标记: 原代码根不在visited中, 环路可把根二次入队后按错误距离重展开
+        addToQueue(level, worldPosition, queue, visited, connections, 1);
 
-        addToQueue(level, worldPosition, queue, travelPositions, connections, 1);
-
-        while (queue.size() > 0) {
-            Map.Entry<BlockPos, Integer> blockPosIntegerEntry = queue.entrySet().stream().findAny().get();
-            addToQueue(level, blockPosIntegerEntry.getKey(), queue, travelPositions, connections, blockPosIntegerEntry.getValue());
-            travelPositions.add(blockPosIntegerEntry.getKey());
-            queue.remove(blockPosIntegerEntry.getKey());
+        while (!queue.isEmpty()) {
+            Map.Entry<BlockPos, Integer> head = queue.removeFirst(); // FIFO出队, 替代原findAny随机出队
+            addToQueue(level, head.getKey(), queue, visited, connections, head.getValue());
         }
 
         connectionCache = new ArrayList<>(connections.values());
@@ -186,7 +187,8 @@ public abstract class PipeTileEntity extends BlockEntity implements ITickableBlo
         }
     }
 
-    public void addToQueue(Level world, BlockPos position, Map<BlockPos, Integer> queue, List<BlockPos> travelPositions, Map<DirectionalPosition, Connection> insertPositions, int distance) {
+    // [修复#1 BFS] 签名适配: queue 改 Deque(FIFO有序), travelPositions(List) 改 visited(Set, O(1)判重); 其余参数与语义不变
+    public void addToQueue(Level world, BlockPos position, Deque<Map.Entry<BlockPos, Integer>> queue, Set<BlockPos> visited, Map<DirectionalPosition, Connection> insertPositions, int distance) {
         Block block = world.getBlockState(position).getBlock();
         if (!(block instanceof PipeBlock)) {
             return;
@@ -206,8 +208,9 @@ public abstract class PipeTileEntity extends BlockEntity implements ITickableBlo
                         }
                     }
                 } else {
-                    if (!travelPositions.contains(p) && !queue.containsKey(p)) {
-                        queue.put(p, distance + 1);
+                    // [修复#1 BFS] 入队即标记(visited.add 原子判重+标记), FIFO保证首次到达即最短距离
+                    if (visited.add(p)) {
+                        queue.add(new AbstractMap.SimpleEntry<>(p, distance + 1));
                     }
                 }
             }
