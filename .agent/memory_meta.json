@@ -1,0 +1,67 @@
+{
+  "next_id": 6,
+  "memory": {
+    "1": {
+      "temp": "∞",
+      "initial_temp": 100,
+      "tags": [
+        "pipez项目",
+        "LMaxs-Pipez-fork",
+        "mc模组"
+      ],
+      "pin": true,
+      "created_at": 1792307169.6009455,
+      "last_accessed": 1792307169.6009455
+    },
+    "2": {
+      "temp": "∞",
+      "initial_temp": 100,
+      "tags": [
+        "fork模组通用规范",
+        "版本号",
+        "命名"
+      ],
+      "pin": true,
+      "created_at": 1792307171.828229,
+      "last_accessed": 1792307171.8282292
+    },
+    "3": {
+      "temp": 21.463876394293724,
+      "initial_temp": 100,
+      "tags": [
+        "pipez项目",
+        "代码审查",
+        "LMaxs-Pipez-fork"
+      ],
+      "pin": false,
+      "created_at": 1792308288.5411644,
+      "last_accessed": 1792308288.5411644
+    },
+    "4": {
+      "temp": 22.593554099256554,
+      "initial_temp": 100,
+      "tags": [
+        "pipez项目",
+        "代码审查",
+        "能量管道",
+        "架构"
+      ],
+      "pin": false,
+      "created_at": 1792309998.229216,
+      "last_accessed": 1792309998.2292163
+    },
+    "5": {
+      "temp": 51.33420832795048,
+      "initial_temp": 100,
+      "tags": [
+        "pipez项目",
+        "LMaxs-Pipez-fork",
+        "能量管道",
+        "bug根因"
+      ],
+      "pin": false,
+      "created_at": 1792328792.65133,
+      "last_accessed": 1792328792.6513302
+    }
+  }
+}
