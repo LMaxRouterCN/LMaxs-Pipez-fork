@@ -27,3 +27,9 @@ runs
 curseforge_api_key.txt
 mod_update_api_key.txt
 modrinth_token.txt
+# PokerAgent 工作产物(仅忽略日志/回收站/临时, .agent 记忆有意保留: 薪火相传)
+.agent_task_logs/
+.agent_trash/
+.agent_temp_files/
+# 参考源码副本(Shinkarna pipez), 不推远端
+reference/

@@ -7,7 +7,8 @@ plugins {
     id 'mod-update' version "${mod_update_version}"
 }
 
-apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
+// [镜像] raw.githubusercontent.com 在当前网络不可达(TLS劫持), 经 gh-proxy.com 加速拉取同一资源, 上游同步时注意此行
+apply from: "https://gh-proxy.com/https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
 
 repositories {
     maven { url = 'https://modmaven.dev' }
